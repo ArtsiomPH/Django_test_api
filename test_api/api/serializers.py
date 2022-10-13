@@ -3,7 +3,7 @@ from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    birth_date = serializers.DateField(format="%d-%m-%Y")
+    birth_date = serializers.DateField(format="%d-%m-%Y", input_formats=("%d-%m-%Y", ))
 
     class Meta:
         model = User
