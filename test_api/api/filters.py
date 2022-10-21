@@ -3,8 +3,8 @@ from .models import User
 
 
 class NumParamsFilter(FilterSet):
-    min_age = NumberFilter(field_name="age", lookup_expr='gte')
-    max_age = NumberFilter(field_name="age", lookup_expr='lte')
+    min_height = NumberFilter(field_name="height", lookup_expr='gte')
+    max_height = NumberFilter(field_name="height", lookup_expr='lte')
 
     min_weight = NumberFilter(field_name="weight", lookup_expr='gte')
     max_weight = NumberFilter(field_name="weight", lookup_expr='lte')
