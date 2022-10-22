@@ -10,6 +10,7 @@ django-filter = "*"
 requests = "*"
 pytest-django = "*"
 pytest = "*"
+pytest-cov = "*"
 
 [dev-packages]
 
