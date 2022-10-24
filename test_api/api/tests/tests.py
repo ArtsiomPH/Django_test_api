@@ -25,10 +25,10 @@ class TestGETReq:
     def test_get_return_correct_item(self, client, get_two_users):
         new_user_1, new_user_2 = get_two_users
         User.objects.create(**new_user_1)
-        User.objects.create(**new_user_2)
+        new_user_in_db = User.objects.create(**new_user_2)
         new_user_2.update({"birth_date": "24-12-1994"})
 
-        response = client.get(self.base_url + '2/')
+        response = client.get(self.base_url + f'{new_user_in_db.id}/')
         assert response.status_code == 200
         assert json.loads(response.content) == new_user_2
 
@@ -85,11 +85,32 @@ class TestPostReq:
     base_url = "http://127.0.0.1:8000/api/v1/users/"
 
     @pytest.mark.django_db
-    def test_create_item(self, client, get_two_users):
+    def test_create_user(self, client, get_two_users):
         new_user, _ = get_two_users
         response = client.post(self.base_url, new_user)
 
         user_in_db = User.objects.first()
         assert response.status_code == 201
         assert json.loads(response.content)['id'] == user_in_db.id
+
+    @pytest.mark.django_db
+    def test_create_user_with_incomplete_data(self, client, get_two_users):
+        new_user, _ = get_two_users
+
+        new_user.pop('birth_date')
+
+        response = client.post(self.base_url, new_user)
+        assert response.status_code == 400
+        assert json.loads(response.content)['birth_date'] == ['This field is required.']
+
+    @pytest.mark.django_db
+    def test_create_user_with_incorrect_data(self, client, get_two_users):
+        new_user, _ = get_two_users
+
+        new_user.update({'height': 'abc'})
+
+        response = client.post(self.base_url, new_user)
+        assert response.status_code == 400
+        assert json.loads(response.content)['height'] == ['A valid number is required.']
+
 
